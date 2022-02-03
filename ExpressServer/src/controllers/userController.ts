@@ -27,7 +27,7 @@ export const registerUser = async (req: Request, res: Response) => {
                 password: hashedPassword
             }
         })
-        res.json({
+        res.status(201).json({
             id: prismaResponse.id,
             token: generateToken(email),
         })

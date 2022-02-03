@@ -31,3 +31,59 @@ export const createJoinRequest = async (req: Request, res: Response) => {
         res.sendStatus(400)
     }
 }
+
+export const approveRequest = async (req: Request, res: Response) => {
+    try {
+        const { userId, courseId } = req.body
+        await prisma.request.delete({
+            where: {
+                userId_courseId: {
+                    userId: userId,
+                    courseId: courseId
+                }
+            }
+        })
+        await prisma.registration.create({
+            data: {
+                userId: userId,
+                courseId: courseId
+            }
+        })
+        res.sendStatus(201)
+    } catch (error) {
+        console.log(error)
+        res.sendStatus(400)
+    }
+}
+
+export const rejectRequest = async (req: Request, res: Response) => {
+    try {
+        const { userId, courseId } = req.body
+        await prisma.request.delete({
+            where: {
+                userId_courseId: {
+                    userId: userId,
+                    courseId: courseId
+                }
+            }
+        })
+        res.sendStatus(201)
+    } catch (error) {
+        console.log(error)
+        res.sendStatus(400)
+    }
+}
+
+export const getRequests = async (req: Request, res: Response) => {
+    try {
+        const requests = await prisma.request.findMany({
+            where: {
+                courseId: req.body.courseId
+            }
+        })
+        res.status(200).json({ requests })
+    } catch (error) {
+        console.log(error)
+        res.sendStatus(400)
+    }
+}

@@ -19,9 +19,9 @@ export const createCourse = async (req: Request, res: Response) => {
                     teacherId: req.user.id                
                 }
             })
-            res.status(201).json({ courseId: newCourse.id })
+            return res.status(201).json({ courseId: newCourse.id })
         }
-        res.sendStatus(401)
+        return res.sendStatus(401)
     } catch (error) {
         console.log(error)
         res.status(400).json({ message: 'Error in creating the course '})

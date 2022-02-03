@@ -6,5 +6,4 @@ const router = express.Router();
 router.route('/create').post(protect, createCourse)
 router.route('/search').get(searchCourse)
 router.route('/:id').get(getCourse)
-
 export default router
