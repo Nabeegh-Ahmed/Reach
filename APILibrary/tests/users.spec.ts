@@ -8,10 +8,10 @@ describe('User integration tests', () => {
             .post('/api/user/register')
             .set('Accept', 'application/json')
             .send({
-                email: 'tessadsssadtas1asda1@test.com',
-                password: 'tasest',
-                firstName: 'tsadest',
-                lastName: 'tesadst'
+                email: 'test@test.com',
+                password: 'test',
+                firstName: 'test',
+                lastName: 'test'
             })
             .expect(201)
     })
