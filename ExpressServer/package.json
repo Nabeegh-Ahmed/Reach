@@ -8,7 +8,9 @@
     "dev": "nodemon src/app.ts",
     "build": "tsc -p .",
     "test": "jest --coverage --maxWorkers=1",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "migrate": "npx prisma migrate dev --name init --schema ./src/prisma/schema.prisma",
+    "seed": "nodemon src/utils/seeder.ts"
   },
   "author": "",
   "license": "ISC",
@@ -18,11 +20,13 @@
     "@types/cors": "^2.8.12",
     "@types/dotenv": "^8.2.0",
     "@types/jsonwebtoken": "^8.5.8",
+    "@types/node-fetch": "2",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^14.3.2",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
+    "node-fetch": "2",
     "prisma": "^3.8.1",
     "supertest": "^6.2.2"
   },
