@@ -1,4 +1,4 @@
-import axios, { Method } from "axios"
+import fetch from 'isomorphic-unfetch'
 
 export abstract class Base {
     private basePath: string = ''
@@ -14,12 +14,9 @@ export abstract class Base {
             ...options,
             headers
         }
-        return axios({
-            url,
-            ...config
-        }).then(res => {
+        return fetch(url, config).then(res => {
             if (res.status >= 200 && res.status < 300) {
-                return res.data
+                return res.json()
             } else {
                 throw new Error(res.statusText)
             }

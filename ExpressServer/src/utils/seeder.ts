@@ -9,9 +9,10 @@ const createUser = async () => {
         body: JSON.stringify({
             firstName: "TestF", 
             lastName: "TestL", 
-            email: "test@example.com", 
+            email: "test@exasadmple.com", 
             password: "test1122334455"
         }),
+
     });
     const json = await response.json();
     console.log(json);

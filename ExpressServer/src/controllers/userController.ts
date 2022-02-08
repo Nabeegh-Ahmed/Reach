@@ -1,10 +1,11 @@
-import {Request, Response} from "express";
+import { Request, Response} from "express";
 import prisma  from "../prisma/client";
 import bcrypt from "bcryptjs";
 import { generateToken } from "../utils/generateToken";
 
 export const registerUser = async (req: Request, res: Response) => {
     const { firstName, lastName, email, password } = req.body;
+    console.log(req.body)
     const user = await prisma.user.findUnique({
         where: {
             email: email
@@ -38,6 +39,8 @@ export const registerUser = async (req: Request, res: Response) => {
 
 export const loginUser = async (req: Request, res: Response) => {
     const {email, password} = req.body
+    console.log(req.body)
+
     const user = await prisma.user.findUnique({
         where: {
             email: email
