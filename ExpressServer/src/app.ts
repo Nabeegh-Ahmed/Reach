@@ -1,5 +1,4 @@
 import express from 'express'
-import cors from 'cors'
 
 import dotenv from 'dotenv'
 dotenv.config();
@@ -16,6 +15,7 @@ declare global {
 
 const app: express.Application = express()
 app.use(express.json())
+
 
 import userRoutes from "./routes/userRoutes"
 import courseRoutes from './routes/courseRoutes'

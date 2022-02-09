@@ -46,6 +46,16 @@ export const getCourse = async(req: Request, res: Response) => {
     }
 }
 
+export const getCourses = async(req: Request, res: Response) => {
+    try {
+        const courses = await prisma.course.findMany()
+        res.status(200).json({ courses })
+    } catch (error) {
+        console.log(error)
+        res.sendStatus(400)
+    }
+}
+
 export const searchCourse = async (req: Request, res: Response) => {
     try {
         if (typeof req.query.search === 'string') {

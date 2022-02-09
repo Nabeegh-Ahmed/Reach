@@ -1,0 +1,26 @@
+type Query {
+  courses: [Course!]!
+  course(id: ID!): Course
+}
+
+type User {
+  id: ID!
+  firstName: String!
+  lastName: String!
+  email: String!
+  password: String!
+  courses: [Course]
+}
+
+type Course {
+  id: ID!
+  name: String!
+  teacher: User!
+  description: String!
+  genre: String!
+  price: Float!
+  totalMarks: Int!
+  startingDate: String!
+  endingDate: String!
+  cover: String!
+}
