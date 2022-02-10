@@ -3,6 +3,11 @@ import asyncHandler from "express-async-handler";
 import { createCourse, getCourse, getCourses, searchCourse } from "../controllers/courseController";
 import { protect } from "../middleware/authMiddleware";
 const router = express.Router();
+/**
+ * This file defines the api routes for courses
+ * @startingPoint: /api/course
+ * each api route use asyncHandler to catch promise rejections
+ */
 
 router.route('/').get(asyncHandler(async (req, res, next) => {
     await getCourses(req, res)

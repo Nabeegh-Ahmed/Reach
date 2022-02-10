@@ -1,6 +1,12 @@
 import { Request, Response } from "express"
 import prisma from "../prisma/client"
 
+/**
+ * Create a join request for a course
+ * @param req { body: { courseId }, user }
+ * @param res 
+ * @returns 
+ */
 export const createJoinRequest = async (req: Request, res: Response) => {
     try {
         const { courseId } = req.body
@@ -32,6 +38,11 @@ export const createJoinRequest = async (req: Request, res: Response) => {
     }
 }
 
+/**
+ * Approves a pending request and then creates a registration
+ * @param req { body: { courseId, userId } }
+ * @param res 
+ */
 export const approveRequest = async (req: Request, res: Response) => {
     try {
         const { userId, courseId } = req.body
@@ -56,6 +67,11 @@ export const approveRequest = async (req: Request, res: Response) => {
     }
 }
 
+/**
+ * Rejects the pending request and deletes the request
+ * @param req { body: { courseId, userId } }
+ * @param res 
+ */
 export const rejectRequest = async (req: Request, res: Response) => {
     try {
         const { userId, courseId } = req.body
@@ -74,8 +90,22 @@ export const rejectRequest = async (req: Request, res: Response) => {
     }
 }
 
+/**
+ * Get requests for a course
+ * @param req 
+ * @param res 
+ */
 export const getRequests = async (req: Request, res: Response) => {
     try {
+        // First checks if the logged in user created the particular course
+        const courseData = await prisma.course.findUnique({
+            where: {
+                id: req.body.courseId
+            }
+        })
+        if(!courseData || courseData.teacherId !== req.user.id) {
+            return res.sendStatus(401)
+        }
         const requests = await prisma.request.findMany({
             where: {
                 courseId: req.body.courseId

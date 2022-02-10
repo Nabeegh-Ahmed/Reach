@@ -1,6 +1,11 @@
 import prisma from '../prisma/client'
 import { Request, Response } from "express"
 
+/**
+ * Get the registered courses of a user
+ * @param req 
+ * @param res 
+ */
 export const getRegisteredCourses = async (req: Request, res: Response) => {
     try {
         if (req.user) {

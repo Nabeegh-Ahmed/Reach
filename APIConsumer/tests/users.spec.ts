@@ -3,6 +3,8 @@ import ReachAPI from "../src/app";
 
 const reachClient = new ReachAPI()
 
+// Defines the test suite for User class and corresponding API End points
+
 describe('User integration tests', () => {
     it('should create a user and return id and jwt', async () => {
         try {

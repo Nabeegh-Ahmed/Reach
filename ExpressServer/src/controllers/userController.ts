@@ -3,6 +3,12 @@ import prisma  from "../prisma/client";
 import bcrypt from "bcryptjs";
 import { generateToken } from "../utils/generateToken";
 
+/**
+ * Register User
+ * @param req { body: { user data }}
+ * @param res 
+ * @returns http status, token, id
+ */
 export const registerUser = async (req: Request, res: Response) => {
     const { firstName, lastName, email, password } = req.body;
     console.log(req.body)
@@ -36,6 +42,13 @@ export const registerUser = async (req: Request, res: Response) => {
         console.log(error)
     }
 }
+
+/**
+ * Logs in a user and returns the id and jwt
+ * @param req 
+ * @param res 
+ * @returns 
+ */
 
 export const loginUser = async (req: Request, res: Response) => {
     const {email, password} = req.body
