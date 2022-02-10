@@ -1,14 +1,20 @@
 import fetch from 'isomorphic-unfetch'
 
-const baseURL = 'http://localhost:5000/api';
 export const resolvers = {
     Query: {
+        // Courses resolver
         courses: () => {
-            return fetch(`${baseURL}/course`).then(res => res.json().then(data =>  data.courses));
+            if (!process.env.baseURL) {
+                throw new Error('Missing baseURL in .env file')
+            } else 
+            return fetch(`${process.env.baseURL}/course`).then(res => res.json().then(data =>  data.courses));
         },
         course: (parent: any, args: any) => {
             const {id} = args
-            return fetch(`${baseURL}/course/${id}`).then(res => res.json().then(data =>  data.course));
+            if (!process.env.baseURL) {
+                throw new Error('Missing baseURL in .env file')
+            } else 
+            return fetch(`${process.env.baseURL}/course/${id}`).then(res => res.json().then(data =>  data.course));
         }
     }
 }
