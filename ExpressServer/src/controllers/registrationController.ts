@@ -8,10 +8,10 @@ import { Request, Response } from "express"
  */
 export const getRegisteredCourses = async (req: Request, res: Response) => {
     try {
-        if (req.user) {
+        if (res.locals.user) {
             const registeredCourses = await prisma.registration.findMany({
                 where: {
-                    userId: req.user.id
+                    userId: res.locals.user.id
                 },
                 include: {
                     course: true

@@ -1,5 +1,5 @@
 import prisma from '../prisma/client'
-import { Request, Response } from "express"
+import { NextFunction, Request, Response } from "express"
 
 /**
  * Creates a course with the given data
@@ -7,11 +7,11 @@ import { Request, Response } from "express"
  * @param res 
  * @returns http response code
  */
-export const createCourse = async (req: Request, res: Response) => {
+export const createCourse = async (req: Request, res: Response, next: NextFunction) => {
     const { name, description, genre, price, startingDate, endingDate, cover} = req.body
     try {
         // Checks for an authenticated request
-        if (req.user) {
+        if (res.locals.user) {
             const newCourse = await prisma.course.create({
                 data: {
                     name,
@@ -23,15 +23,24 @@ export const createCourse = async (req: Request, res: Response) => {
                     cover,
                     rating: 0,
                     totalMarks: 0,
-                    teacherId: req.user.id                
+                    teacherId: res.locals.user.id
                 }
             })
             return res.status(201).json({ courseId: newCourse.id })
         }
-        return res.sendStatus(401)
+        res.locals.error = {
+            message: "You are not authorized to create a course"
+        }
+        res.locals.status = 401;
+        return next()
     } catch (error) {
         console.log(error)
-        res.status(400).json({ message: 'Error in creating the course '})
+        res.locals.error = {
+            message: "Error in creating a course",
+            error: error
+        }
+        res.locals.status = 400;
+        return next()
     }
 }
 
@@ -42,23 +51,29 @@ export const createCourse = async (req: Request, res: Response) => {
  * @param req { params: { id }, query: {skip, take} }
  * @param res 
  */
-export const getCourse = async(req: Request, res: Response) => {
+export const getCourse = async(req: Request, res: Response, next: NextFunction) => {
     try {
         const course = await prisma.course.findUnique({
             where: {
                 id: Number(req.params.id)
-            },
-            skip: Number(req.query.skip) ? Number(req.query.skip) : 0,
-            take: Number(req.query.take) ? Number(req.query.take) : 10 
+            }
         })
         if (course) {
             res.status(200).json({ course })
         } else {
-            res.sendStatus(404)
+            res.locals.error = {
+                message: "Course not found"
+            }
+            res.locals.status = 400;
+            return next()
         }
     } catch (error) {
         console.log(error)
-        res.sendStatus(400)
+        res.locals.error = {
+            error: error
+        }
+        res.locals.status = 400;
+        return next()
     }
 }
 
@@ -67,13 +82,17 @@ export const getCourse = async(req: Request, res: Response) => {
  * @param req
  * @param res 
  */
-export const getCourses = async(req: Request, res: Response) => {
+export const getCourses = async(req: Request, res: Response, next: NextFunction) => {
     try {
         const courses = await prisma.course.findMany()
         res.status(200).json({ courses })
     } catch (error) {
         console.log(error)
-        res.sendStatus(400)
+        res.locals.error = {
+            error
+        }
+        res.locals.status = 400;
+        return next()
     }
 }
 
@@ -82,7 +101,7 @@ export const getCourses = async(req: Request, res: Response) => {
  * @param req 
  * @param res 
  */
-export const searchCourse = async (req: Request, res: Response) => {
+export const searchCourse = async (req: Request, res: Response, next: NextFunction) => {
     try {
         if (typeof req.query.search === 'string') {
             const searchedCoruses = await prisma.course.findMany({
@@ -96,10 +115,50 @@ export const searchCourse = async (req: Request, res: Response) => {
             })
             res.status(200).json({ courses: searchedCoruses })
         } else {
-            res.sendStatus(400)
+            res.locals.error = {
+                message: "Invalid search query"
+            }
+            res.locals.status = 400;
+            return next()
         }
     } catch (error) { 
         console.log(error)
-        res.sendStatus(400)
+        res.locals.error = {
+            error
+        }
+        res.locals.status = 400;
+        return next()
+    }
+}
+
+export const deleteCourse = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        if (req.params.id && res.locals.user) {
+            const course = await prisma.course.delete({
+                where: {
+                    id: Number(req.params.id)
+                }
+            })
+            if (course) {
+                return res.sendStatus(200)
+            }
+            res.locals.error = {
+                message: "Course not found"
+            }
+            res.locals.status = 404;
+            return next()
+        }
+        res.locals.error = {
+            message: "You are not authorized to delete this course"
+        }
+        res.locals.status = 400;
+        return next()
+    } catch (error) {
+        console.log(error)
+        res.locals.error = {
+            error
+        }
+        res.locals.status = 400;
+        return next()
     }
 }

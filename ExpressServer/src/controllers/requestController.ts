@@ -10,11 +10,11 @@ import prisma from "../prisma/client"
 export const createJoinRequest = async (req: Request, res: Response) => {
     try {
         const { courseId } = req.body
-        if (req.user) {
+        if (res.locals.user) {
             const existingRequest = await prisma.request.findUnique({
                 where: {
                     userId_courseId: {
-                        userId: req.user.id,
+                        userId: res.locals.user.id,
                         courseId: courseId
                     }
                 }
@@ -24,7 +24,7 @@ export const createJoinRequest = async (req: Request, res: Response) => {
             }
             const newRequest = await prisma.request.create({
                 data: {
-                    userId: req.user.id,
+                    userId: res.locals.user.id,
                     courseId: courseId,
                     status: 'PENDING'
                 }
@@ -103,7 +103,8 @@ export const getRequests = async (req: Request, res: Response) => {
                 id: req.body.courseId
             }
         })
-        if(!courseData || courseData.teacherId !== req.user.id) {
+        if (!res.locals.user) return res.sendStatus(401)
+        if(!courseData || courseData.teacherId !== res.locals.user.id) {
             return res.sendStatus(401)
         }
         const requests = await prisma.request.findMany({

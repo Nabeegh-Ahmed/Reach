@@ -1,4 +1,4 @@
-import { Request, Response} from "express";
+import { NextFunction, Request, Response} from "express";
 import prisma  from "../prisma/client";
 import bcrypt from "bcryptjs";
 import { generateToken } from "../utils/generateToken";
@@ -9,23 +9,24 @@ import { generateToken } from "../utils/generateToken";
  * @param res 
  * @returns http status, token, id
  */
-export const registerUser = async (req: Request, res: Response) => {
+export const registerUser = async (req: Request, res: Response, next: NextFunction) => {
     const { firstName, lastName, email, password } = req.body;
-    console.log(req.body)
     const user = await prisma.user.findUnique({
         where: {
             email: email
         }
     })
     if (user) {
-        return res.status(400).json({
-            message: "User already exists."
-        })
+        res.locals.error = {
+            message: "User already exists"
+        }
+        res.locals.status = 400;
+        return next()
     }
+
     const salt = await bcrypt.genSalt(10)
     const hashedPassword = await bcrypt.hash(password, salt)
     try {
-        // TODO: Add email validation
         const prismaResponse = await prisma.user.create({
             data: {
                 firstName,
@@ -40,6 +41,11 @@ export const registerUser = async (req: Request, res: Response) => {
         })
     } catch (error) {
         console.log(error)
+        res.locals.error = {
+            message: error
+        }
+        res.locals.status = 400;
+        next()
     }
 }
 
@@ -50,19 +56,19 @@ export const registerUser = async (req: Request, res: Response) => {
  * @returns 
  */
 
-export const loginUser = async (req: Request, res: Response) => {
+export const loginUser = async (req: Request, res: Response, next: NextFunction) => {
     const {email, password} = req.body
-    console.log(req.body)
-
     const user = await prisma.user.findUnique({
         where: {
             email: email
         }
     })
     if (!user) {
-        return res.status(401).json({
-            message: "Invalid credentials"
-        })
+        res.locals.error = {
+            message: "Invalid Credentials"
+        }
+        res.locals.status = 400;
+        return next()
     }
     const passwordMatch = await bcrypt.compare(password, user.password)
     if (passwordMatch) {
@@ -71,8 +77,10 @@ export const loginUser = async (req: Request, res: Response) => {
             token: generateToken(email),
         })
     } else {
-        res.status(401).json({
-            message: "Invalid credentials"
-        })
+        res.locals.error = {
+            message: "Invalid Credentials"
+        }
+        res.locals.status = 401;
+        return next()
     }
 }

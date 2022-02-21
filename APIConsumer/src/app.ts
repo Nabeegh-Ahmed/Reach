@@ -1,6 +1,7 @@
 import { Users } from "./users";
 import { Base } from "./base";
 import { applyMixins } from "./utils/applyMixins";
+import { Courses } from "./courses";
 
 // Creating ReachAPI
 class ReachAPI extends Base {}
@@ -10,3 +11,9 @@ interface ReachAPI extends Users {}
 applyMixins(ReachAPI, [Users])
 
 export default ReachAPI
+
+
+{
+    Users
+    Courses
+}

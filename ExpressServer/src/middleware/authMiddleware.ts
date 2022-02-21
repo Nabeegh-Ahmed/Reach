@@ -28,13 +28,14 @@ export const protect = async (req: Request, res: Response, next: NextFunction) =
                     // if no email is found, return a 401 errorr
                     res.status(401).json({ message: 'USer not Authorized'})
                 } else {
-                    // Update the req.user object
+                    // Update the res.locals.user object
                     res.status(200)
-                    req.user = user
+                    res.locals.user = user
                     next()
                 }
             }
         } catch(error) {
+            next(error);
             console.error(error)
             res.status(401).json({message: 'User not Authorized'})
         }
