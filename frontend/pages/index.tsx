@@ -1,9 +1,15 @@
 import MainLayout from '../layouts/mainLayout'
-import type { NextPage } from 'next'
+import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
-import Button from '../components/button'
+import CourseCard from '../components/courseCard'
+import ReachAPI from '../APIConsumer'
+import { Course } from '../APIConsumer/courses/types'
 
-const Home: NextPage = () => {
+interface HomePageProps {
+  courses: Course[]
+}
+
+const Home: NextPage<HomePageProps> = ({ courses }) => {
   return (
     <div>
       <Head>
@@ -12,10 +18,48 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <MainLayout>
-      <Button variant={'primary'} textSize={'xl'}>asasd</Button>
+        <div className='p-10 border-2 rounded-2xl bg-gradient-to-br from-primary to-blue-500   text-cyan-50	 '>
+          <h1 className='text-white text-3xl font-bold mb-5'>50% OFF ON EVERY COURSE</h1>
+          <p className='text-white mb-5'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Neque aspernatur fugiat labore magni ullam debitis error saepe, laboriosam voluptate itaque quaerat repudiandae eveniet quis sed officia. Libero aliquid incidunt labore!</p>
+          
+          <div className='flex space-x-4 mt-5'>
+            <div className='w-5 bg-cyan-50 rounded-full p-3'></div>
+            <div className='w-5 bg-cyan-50 rounded-full p-3'></div>
+            <div className='w-5 bg-cyan-50 rounded-full p-3'></div>
+          </div>
+        </div>
+
+        <div className='grid grid-cols-3 mt-5 space-x-4'>
+          
+        {
+          courses.map(course => 
+            <CourseCard 
+              key={course.id} 
+              id={course.id}
+              title={course.name} 
+              cover={course.cover}  
+              description={course.description}
+              price={course.price}
+              rating={course.rating}
+            />
+          )
+        }
+        </div>
+        
+
       </MainLayout>
     </div>
   )
 }
 
 export default Home
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  const api = new ReachAPI()
+  const {courses} = await api.courses().getCourses()
+  return {
+    props: {
+      courses
+    }
+  }
+}

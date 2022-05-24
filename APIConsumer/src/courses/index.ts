@@ -1,37 +1,59 @@
-import { Base } from "../base";
+import { request } from "../Tranport Layer";
+import { CreateCoursePayload, CreatedCourseResponse, Course, CourseDeletionResponse } from "./types";
+import { CourseEndPoints } from './endPoints'
+import { defaultTransportParams, TransportParams } from "../Tranport Layer/types";
 
-export class Courses extends Base {
-    /**
-     * 
-     * @param name String (name of the course)
-     * @param description String (description of the course)
-     * @param genre String (genre of the course)
-     * @param price Float (price of the course)
-     * @param startingDate Date (starting date of the course)
-     * @param endingDate Date (ending date of the course)
-     * @param cover String (cover image url)
-     * @returns 
-     */
-    createCourse(
-        name: string,
-        description: string,
-        genre: string,
-        price: number,
-        startingDate: Date,
-        endingDate: Date,
-        cover: string
-    ) {
-        return this.request<{id: string, token: string}>('/api/user/login', {
+class Courses {
+    private route = '/course'
+    private transportParams: TransportParams = defaultTransportParams
+    
+    async create(courseData: CreateCoursePayload): Promise<CreatedCourseResponse> {
+        if (this.transportParams.jwt === '') throw Promise.reject({message: 'No JWT provided'})
+        return request({
+            endPoint: CourseEndPoints.create,
+            route: this.route,
             method: 'POST',
-            body: JSON.stringify({
-                name,
-                description,
-                genre,
-                price,
-                startingDate,
-                endingDate,
-                cover
-            })
+            body: courseData,
+            headers: {
+                'Authorization': `Bearer ${this.transportParams.jwt}`,
+                ...this.transportParams.headers
+            }
         })
     }
+    async getCourseData(courseId: string): Promise<{course: Course}> {
+        return request({
+            endPoint: CourseEndPoints.course + courseId,
+            route: this.route,
+            method: 'GET',
+            body: null,
+            headers: null
+        })
+    }
+    async getCourses(): Promise<{courses: Course[]}> {
+        return request({
+            endPoint: CourseEndPoints.courses,
+            route: this.route,
+            method: 'GET',
+            body: null,
+            headers: null
+        })
+    }
+    async deleteCourse(courseId: string): Promise<CourseDeletionResponse> {
+        if (this.transportParams.jwt === '') throw Promise.reject({message: 'No JWT provided'})
+        return request({
+            endPoint: CourseEndPoints.delete + courseId,
+            route: this.route,
+            method: 'POST',
+            body: {},
+            headers: {
+                'Authorization': `Bearer ${this.transportParams.jwt}`
+            }
+        })
+    }
+    setTransportParams(transportParams: TransportParams) {
+        if (this.transportParams.jwt === '') this.transportParams.jwt = transportParams.jwt
+        else this.transportParams = transportParams
+    }
 }
+
+export default Courses

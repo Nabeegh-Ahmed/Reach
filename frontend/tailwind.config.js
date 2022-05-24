@@ -1,3 +1,5 @@
+const colors = require('tailwindcss/colors')
+
 module.exports = {
   content: [
     "./pages/**/*.{js,ts,jsx,tsx}",
@@ -7,8 +9,10 @@ module.exports = {
     extend: {
       colors: {
         primary: '#58CCED',
-        secondary: '#FFFFFF'
-      }
+        secondary: 'rgba(88, 204, 237, 0)',
+        
+        ...colors
+      },
     },
   },
   plugins: [],

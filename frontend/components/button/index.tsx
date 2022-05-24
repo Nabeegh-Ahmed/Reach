@@ -1,21 +1,37 @@
 import { ButtonProps } from "./types"
 
-const Button: React.FC<ButtonProps> = ({ children, variant, textSize, style }) => {
+const Button: React.FC<ButtonProps> = ({ children, variant, textSize, style, className, onClick, fullWidth }) => {
+    let styles = ""
+    if (variant === "primary")
+        styles = `
+            text-white
+            hover:text-primary
+            bg-gradient-to-r from-primary to-blue-500
+            hover:bg-gradient-to-r hover:from-white hover:to-cyan-50
+            border-primary shadow-lg rounded-full  p-3 text-${textSize} font-bold
+            animation transition-all ease-linear duration-400 ${className}
+            ${fullWidth && "w-full"}
+        `
+    else 
+        styles = `
+            text-primary
+            hover:text-white
+            hover:bg-gradient-to-r hover:from-primary hover:to-blue-500
+            bg-gradient-to-r from-white to-cyan-50
+            border-primary shadow-lg rounded-full  p-3 text-${textSize} font-bold
+            animation transition-all ease-linear duration-400 ${className}
+            ${fullWidth && "w-full"}
+        `
     return (
         <button 
-            className={`
-                text-${ variant === 'primary' ? 'secondary' : 'primary' } 
-                hover:text-${ variant === 'primary' ? 'primary' : 'secondary' } 
-                bg-${ variant === 'primary' ? 'primary' : 'secondary' } 
-                hover:bg-${ variant === 'primary' ? 'secondary' : 'primary' }
-                border-primary shadow-lg rounded-2xl border-4 p-2 text-${textSize}
-                animation transition-all ease-linear duration-200
-            `} 
+            className={styles} 
             style={style}
+            onClick={onClick}
         >
             {children}
         </button>
     )
+
 }
 
 Button.defaultProps = {

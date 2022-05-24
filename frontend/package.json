@@ -11,10 +11,18 @@
     "build-storybook": "build-storybook"
   },
   "dependencies": {
+    "@types/cookie": "^0.4.1",
+    "@types/react-icons": "^3.0.0",
+    "@types/react-query": "^1.2.9",
+    "cookie": "^0.4.2",
+    "express-async-handler": "^1.2.0",
     "next": "12.1.0",
+    "reach-api-consumer": "^1.0.3",
     "react": "17.0.2",
     "react-docgen-typescript": "^2.2.2",
-    "react-dom": "17.0.2"
+    "react-dom": "17.0.2",
+    "react-icons": "^4.3.1",
+    "react-query": "^3.34.20"
   },
   "devDependencies": {
     "@babel/core": "^7.17.5",
@@ -28,6 +36,7 @@
     "@types/react": "17.0.39",
     "autoprefixer": "^9",
     "babel-loader": "^8.2.3",
+    "cypress": "^9.5.3",
     "eslint": "8.10.0",
     "eslint-config-next": "12.1.0",
     "eslint-plugin-storybook": "^0.5.7",

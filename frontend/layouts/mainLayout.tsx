@@ -3,8 +3,11 @@ import Header from "../components/header"
 const MainLayout: React.FC = ({ children }) => {
     return (
         <>
-            <Header title="Template" links={[{name: "About", path: "/about"}]} />
-        {children}
+            <Header title="Reach" links={[]} />
+            <div className="container p-5 mx-auto">
+                {children}
+            </div>
+            
         </>
     )
 }

@@ -140,7 +140,7 @@ export const deleteCourse = async (req: Request, res: Response, next: NextFuncti
                 }
             })
             if (course) {
-                return res.sendStatus(200)
+                return res.status(200).json({ message: "Course deleted." })
             }
             res.locals.error = {
                 message: "Course not found"

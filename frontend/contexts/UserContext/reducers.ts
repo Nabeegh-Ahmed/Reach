@@ -18,7 +18,7 @@ export const userReducer = (state: IUserState, action: Actions): IUserState => {
         }
 
         case "LOGIN_SUCCESS": {
-            const { id, email, username } = action.payload
+            const { id, email, username, token } = action.payload
             return {
                 ...state,
                 isAuth: true,
@@ -27,7 +27,8 @@ export const userReducer = (state: IUserState, action: Actions): IUserState => {
                 user: {
                     id: id,
                     email: email,
-                    username: username
+                    username: username,
+                    token: token
                 },
             }
         }
@@ -43,8 +44,8 @@ export const userReducer = (state: IUserState, action: Actions): IUserState => {
         }
 
         case "LOGOUT_SUCCESS": {
+            
             return {
-                ...state,
                 isAuth: false,
                 user: null,
                 loading: false,
@@ -67,7 +68,7 @@ export const userReducer = (state: IUserState, action: Actions): IUserState => {
         }
 
         case "REGISTER_SUCCESS": {
-            const { id, email, username } = action.payload
+            const { id, email, username, token } = action.payload
             return {
                 ...state,
                 isAuth: true,
@@ -76,7 +77,8 @@ export const userReducer = (state: IUserState, action: Actions): IUserState => {
                 user: {
                     id: id,
                     email: email,
-                    username: username
+                    username: username,
+                    token: token
                 }
             }
         }

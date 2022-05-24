@@ -2,6 +2,7 @@ export interface IUserDetails {
     id: number
     email: string
     username: string
+    token: string
 }
 
 export interface IUserState {

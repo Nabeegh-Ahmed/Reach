@@ -114,6 +114,7 @@ router.route("/register").post(userInputValidator, asyncHandler(async (req, res,
  *              description: Invalid Credentials
  */
 router.route("/login").post(userInputValidator, asyncHandler(async (req, res, next) => {
+    console.log(req.body)
     await loginUser(req, res, next)
 }), errorHandler)
 
