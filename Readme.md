@@ -1,3 +1,6 @@
+### Reach
+A very basic Course Managment Systems that uses Strapi CMS on its backend and Next JS on the frontend.
+
 ## How to set up
 
 1. Clone the repository
