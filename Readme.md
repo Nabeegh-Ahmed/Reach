@@ -1,4 +1,4 @@
-### Reach
+# Reach
 A very basic Course Managment System
 
 # Tech Stack
